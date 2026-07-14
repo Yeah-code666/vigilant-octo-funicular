@@ -1,61 +1,46 @@
-//
-//  ContentView.swift
-//  CampusCare
-//
-//  Created by 汪一然 on 2026/7/14.
-//
-
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @State private var selectedTab = 0
+    @AppStorage("darkModeEnabled") private var darkMode = false
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        TabView(selection: $selectedTab) {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                .tag(0)
+            
+            QuickCheckinView()
+                .tabItem {
+                    Label("Check-in", systemImage: "square.and.pencil")
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+                .tag(1)
+            
+            AnalysisView()
+                .tabItem {
+                    Label("Analysis", systemImage: "chart.bar.fill")
                 }
-            }
-        } detail: {
-            Text("Select an item")
+                .tag(2)
+            
+            AIAssistantView()
+                .tabItem {
+                    Label("AI", systemImage: "brain.head.profile")
+                }
+                .tag(3)
+            
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person.fill")
+                }
+                .tag(4)
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+        .tint(.blue)
+        .preferredColorScheme(darkMode ? .dark : nil)
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
