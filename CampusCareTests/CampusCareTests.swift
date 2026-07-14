@@ -11,6 +11,7 @@ import Testing
 
 struct CampusCareTests {
 
+    @MainActor
     @Test func updatingHealthDataUpdatesMemoryAndStorage() {
         let suiteName = "CampusCareTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
@@ -39,6 +40,7 @@ struct CampusCareTests {
         #expect(defaults.integer(forKey: "userWater") == 9)
     }
 
+    @MainActor
     @Test func checkinOptionsMapToDistinctNumericValues() {
         #expect(QuickCheckinView.sleepValues == [5.5, 6.5, 7.5, 8.0])
         #expect(QuickCheckinView.studyValues == [2.0, 4.0, 6.0, 8.0])

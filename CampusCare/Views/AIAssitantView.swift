@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct AIAssistantView: View {
     @State private var messages: [ChatMessage] = [
